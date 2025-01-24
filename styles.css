@@ -1,0 +1,21 @@
+img {
+    width: 2%;
+    height: auto;
+    padding-left: 0;
+    padding-right: 0;
+}
+#white_keys {
+    display: flex;
+}
+
+#black_key {
+    
+    width: 1.5%;
+}
+
+#black_keys {
+    display: flex;
+    position: relative;
+    top: -33vh;
+    left: 0.9vw;
+}
