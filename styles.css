@@ -1,25 +1,30 @@
-#img_container {
-    padding-left: 0;
-    padding-right: 0;
-}
 img {
-    width: 50%;
     height: auto;
-    padding-left: 0;
-    padding-right: 0;
-}
-#white_keys {
-    display:flex;
-    width: 5%;
+    width: 100%;
 }
 
-#black_key {
-    width: 2%;
-    
+#white_keys {
+    display:flex;
+    gap: 0;
+    margin: 0;
+    padding-left: 0%;
+    padding-right: 0%;
+    width: 80%;
+}
+#white_key {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 #black_keys {
     display: flex;
-    position: relative;
-    top: -45vh;
+    position:relative;
+    top: -44.2vh;
+    width: 80%;
 }
+
+#black_key {
+    width: 40%;
+    position: relative;
+}
+
