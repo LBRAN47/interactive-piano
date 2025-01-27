@@ -2,7 +2,7 @@ img {
     height: auto;
 }
 
-#white_keys {
+.white_keys  {
     display:flex;
     justify-content: flex-start;
     gap: 0;
@@ -11,24 +11,26 @@ img {
     padding-right: 0%;
     width: 80%;
 }
-#white_key {
-    padding-left: 0;
-    padding-right: 0;
+.white_key {
     width: 100%;
+    transition: transform 0.3s ease;
+    
 }
-#black_keys {
+.black_keys {
     display: flex;
     justify-content: flex-start;
     position: relative;
     top: -43.7vh;
 }
-#img_container {
+.img_container {
     display: flex;
     align-items: center;
 }
-#black_key {    
-    display: block;
-    height: auto;
+.black_key {    
     width: 1.93vw;
+    transition: transform 0.3s ease;
+}
+.selected_key {
+    transform: scale(1.05)
 }
 
