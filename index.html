@@ -61,32 +61,31 @@
         <div id="img_container"><img id='black_key' src="Images/piano_black.PNG"></div>
         <div id="img_container"><img id='black_key' src="Images/piano_black.PNG"></div>
         <div id="img_container"><img id='black_key' src="Images/piano_black.PNG"></div>
+        <div id="img_container"><img id='black_key' src="Images/piano_black.PNG"></div>
+        <div id="img_container"><img id='black_key' src="Images/piano_black.PNG"></div>
+        <div id="img_container"><img id='black_key' src="Images/piano_black.PNG"></div>
+        <div id="img_container"><img id='black_key' src="Images/piano_black.PNG"></div>
     </div>
     <script>
         pad_black_keys()
         function pad_black_keys() {
-            const black_keys = document.getElementById("black_keys").querySelectorAll('*');
+            const black_keys = document.getElementById("black_keys").querySelectorAll('img');
             let count = -1
             black_keys.forEach(function(black_key) {
-                if (black_key.id == "img_container") {
-                    return;
-                }
-                console.log(black_key)
                 if (count == -1) {
-                    black_key.style.marginLeft += "10%";
-                    black_key.style. marginRight += '0%';
+                    black_key.style.paddingLeft = "1.65vw";
+                    black_key.style.paddingRight = '1.55vw';
                     count++;
                     return;
                 }
                 if (count % 5 === 0 || count % 5 === 2) {
-                    black_key.style.marginLeft += '1%';
+                    black_key.style.paddingLeft = '1.55vw';
                 } else {
-                    black_key.style.marginLeft += '1%';
-                }
-                if (count % 5 === 1 || count % 5 === 4) {
-                    black_key.style.marginRight += '87%';
+                    black_key.style.paddingLeft = "0.35vw";
+                }if (count % 5 === 1 || count % 5 === 4) {
+                    black_key.style.paddingRight = '1.55vw';
                 } else {
-                    black_key.style.marginRight += '70%';
+                    black_key.style.paddingRight = "0.35vw";
                 }
                 count++;
             })

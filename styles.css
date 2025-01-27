@@ -1,10 +1,10 @@
 img {
     height: auto;
-    width: 100%;
 }
 
 #white_keys {
     display:flex;
+    justify-content: flex-start;
     gap: 0;
     margin: 0;
     padding-left: 0%;
@@ -14,17 +14,21 @@ img {
 #white_key {
     padding-left: 0;
     padding-right: 0;
+    width: 100%;
 }
-
 #black_keys {
     display: flex;
-    position:relative;
-    top: -44.2vh;
-    width: 80%;
-}
-
-#black_key {
-    width: 40%;
+    justify-content: flex-start;
     position: relative;
+    top: -43.7vh;
+}
+#img_container {
+    display: flex;
+    align-items: center;
+}
+#black_key {    
+    display: block;
+    height: auto;
+    width: 1.93vw;
 }
 
