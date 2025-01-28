@@ -1,5 +1,6 @@
 img {
     height: auto;
+    -webkit-user-drag: none;
 }
 
 .white_keys  {
@@ -31,6 +32,6 @@ img {
     transition: transform 0.3s ease;
 }
 .selected_key {
-    transform: scale(1.05)
+    transform: scale(0.97)
 }
 

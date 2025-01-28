@@ -67,12 +67,26 @@
         <div class="img_container"><img class='black_key' src="Images/piano_black.PNG"></div>
     </div>
     <script>
+        const keys_selected = []
         pad_black_keys()
         const keys = document.querySelectorAll(".black_key, .white_key")
         keys.forEach(function(key) {
-            key.addEventListener("click", (e) => {
+            key.addEventListener("mousedown", (event) => {
                 key.parentElement.classList.add("selected_key");
-                
+                keys_selected.push(key);
+                console.log(keys_selected)
+            })
+            key.addEventListener("mouseup", (event) => {
+                function is_match(element) {
+                    return element === key;
+                }
+                key_index = keys_selected.findIndex(is_match)
+                if (key_index != -1) {
+                    console.log(key_index)
+                    console.log(key.parentElement.classList)
+                    key.parentElement.classList.remove("selected_key");
+                    keys_selected.splice(key_index, 1);
+                }
             })
         })
         function pad_black_keys() {
