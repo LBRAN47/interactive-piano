@@ -1,6 +1,20 @@
+html, body {
+    align-items: center;
+    background: linear-gradient(310deg, #ccffcc, #ffbf80, #80aaff);
+    height: 98.8%;
+}
 img {
-    height: auto;
     -webkit-user-drag: none;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.description {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
 }
 
 .white_keys  {
@@ -11,6 +25,7 @@ img {
     padding-left: 0%;
     padding-right: 0%;
     width: 80%;
+    border: 10px solid rgba(204, 102, 153, 0.5);
 }
 .white_key {
     width: 100%;
@@ -21,17 +36,17 @@ img {
     display: flex;
     justify-content: flex-start;
     position: relative;
-    top: -43.7vh;
+    top: -52vh;
 }
 .img_container {
     display: flex;
-    align-items: center;
 }
+
 .black_key {    
     width: 1.93vw;
     transition: transform 0.3s ease;
 }
 .selected_key {
-    transform: scale(0.97)
+    transform: scale(0.97);
 }
 

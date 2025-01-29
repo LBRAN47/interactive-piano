@@ -8,7 +8,7 @@ window.addEventListener('mouseup', (event) => {
         let keys = [];
         keys_selected.forEach((audio, key_selected) => {
             key_selected.parentElement.classList.remove('selected_key');
-            audio.pause();
+            //audio.pause();
             keys.push(key_selected);
         })
         keys_selected.clear();
@@ -42,7 +42,7 @@ function keyup_listener(event) {
     if (event.key in key_binds)  {
         key = document.getElementById(key_binds[event.key]);
         key.parentElement.classList.remove('selected_key');
-        keys_selected.get(key).pause();
+        //keys_selected.get(key).pause();
         keys_selected.delete(key);
     }
 }
@@ -60,17 +60,17 @@ function pad_black_keys() {
     let count = -1
     black_keys.forEach(function(black_key) {
         if (count == -1) {
-            black_key.style.paddingLeft = '1.65vw';
-            black_key.style.paddingRight = '1.55vw';
+            black_key.style.paddingLeft = '2.2vw';
+            black_key.style.paddingRight = '1.56vw';
             count++;
             return;
         }
         if (count % 5 === 0 || count % 5 === 2) {
-            black_key.style.paddingLeft = '1.55vw';
+            black_key.style.paddingLeft = '1.56vw';
         } else {
             black_key.style.paddingLeft = '0.35vw';
         }if (count % 5 === 1 || count % 5 === 4) {
-            black_key.style.paddingRight = '1.55vw';
+            black_key.style.paddingRight = '1.56vw';
         } else {
             black_key.style.paddingRight = '0.35vw';
         }
