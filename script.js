@@ -130,7 +130,7 @@ function draw_note(note) {
             ctx.fill();
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
-            ctx.arc(100, height-2, 10, 0, Math.PI * 2, true);
+            ctx.ellipse(100, height, 15, 10, (Math.PI) /2 - 0.2, 0, Math.PI*2, true);
             ctx.fill()
             ctx.globalCompositeOperation = 'source-over';
             let true_height = height/20;
@@ -149,9 +149,7 @@ function draw_note(note) {
                     } else {
                         line--;
                     }
-                    
                 }
-                
             }
             break;
         }
