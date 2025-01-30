@@ -21,6 +21,9 @@ const notes = ['A1', 'Bb1', 'B1', 'C2', 'Db2', 'D2', 'Eb2', 'E2', 'F2', 'Gb2',
 //notes that have a ledger line attached to them.
 const ledger_lines = [2, 4, 16, 28, 30, 32];
 
+const CANVAS_HEIGHT = 800;
+const CANVAS_WIDTH = 200;
+
 ///////////////////////////////////////////////////////////////////////////////
 
 //GLOBALS//////////////////////////////////////////////////////////////////////
@@ -34,14 +37,12 @@ pad_black_keys();
 draw_staff();
 
 window.addEventListener('mouseup', (event) => {
-        let keys = [];
         keys_selected.forEach((audio, key_selected) => {
             key_selected.parentElement.classList.remove('selected_key');
-            //audio.pause();
-            keys.push(key_selected);
         })
         keys_selected.clear();
         mousedown = false;
+        redraw_staff();
     })
 window.addEventListener('keydown', keydown_listener);
 window.addEventListener('keyup', keyup_listener)
@@ -71,8 +72,8 @@ function keyup_listener(event) {
     if (key_binds.has(event.key))  {
         key = document.getElementById(key_binds.get(event.key));
         key.parentElement.classList.remove('selected_key');
-        //keys_selected.get(key).pause();
         keys_selected.delete(key);
+        redraw_staff();
     }
 }
 
@@ -80,8 +81,8 @@ function press_key(key) {
     key.parentElement.classList.add('selected_key');
     let audio = new Audio('Sounds/' + key.id + '.mp3');
     audio.play();
-    draw_note(key.id);
     keys_selected.set(key, audio);
+    redraw_staff();
     
 
 }
@@ -109,8 +110,8 @@ function pad_black_keys() {
 }
 function draw_staff() {
     const canvas = document.getElementById('staff_canvas');
-    canvas.height = 800;
-    canvas.width = 200;
+    canvas.height = CANVAS_HEIGHT;
+    canvas.width = CANVAS_WIDTH;
 
     const ctx = canvas.getContext('2d');
     const staff_height = 400;
@@ -132,6 +133,7 @@ function draw_staff() {
 function is_outside_staff(true_height) {
     return (true_height > 26 || true_height < 5 || true_height === 16);
 }
+
 /**
  * renders a note at the given height onto the staff with the appropriate
  * ledger lines.
@@ -186,6 +188,17 @@ function draw_note(note) {
             break;
         }
     } 
+}
+/**
+ * clears the canvas and draws the staff + every note that is currently selected
+ */
+function redraw_staff() {
+    const ctx = document.getElementById('staff_canvas').getContext('2d');
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    draw_staff();
+    for (let key of keys_selected.keys()) {
+        draw_note(key.id);
+    }
 }
 
     
