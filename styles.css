@@ -16,6 +16,9 @@ img {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 20px;
 }
+.piano {
+    position: relative;
+}
 
 .white_keys  {
     display:flex;
@@ -35,8 +38,8 @@ img {
 .black_keys {
     display: flex;
     justify-content: flex-start;
-    position: relative;
-    top: -52vh;
+    position: absolute;
+    top: 1vh;
 }
 .img_container {
     display: flex;
