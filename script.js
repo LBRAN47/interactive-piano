@@ -1,18 +1,35 @@
-let keys_selected = new Map()
-let mousedown = false
-let keydown = false
-const key_binds = new Map([['1', 'Gb2'], ['q' , 'G2'], ['2', 'Ab2'], ['w' , 'A2'],
-    ['3', 'Bb2'], ['e', 'B2'], ['r' , 'C3'], ['5', 'Db3'], ['t', 'D3'], ['6', 'Eb3'],
-    ['y', 'E3'], ['u', 'F3'], ['8', 'Gb3'], ['i', 'G3'], ['9', 'Ab3'], ['o', 'A3'],
-    ['p', 'B3'], ['0', 'Bb3'], ['[', 'C4'], ['=', 'Db4'], ['z', 'D4'], ['s', 'Eb4'],
-    ['x', 'E4'], ['c', 'F4'], ['f', 'Gb4'], ['v', 'G4'], ['g', 'Ab4'], ['b', 'A4'],
-    ['h', 'Bb4'], ['n', 'B4'], ['m', 'C5'], ['k', 'Db5'], [',', 'D5'], ['l', 'Eb5'],
-    ['.', 'E5'], ['/', 'F5'], ['\'', 'Gb5']]);
+//CONSTANTS////////////////////////////////////////////////////////////////////
+
+//Maps a keybind to its corresponding note
+const key_binds = new Map([['1', 'Gb2'], ['q', 'G2'], ['2', 'Ab2'],
+    ['w', 'A2'], ['3', 'Bb2'], ['e', 'B2'], ['r', 'C3'], ['5', 'Db3'],
+    ['t', 'D3'], ['6', 'Eb3'], ['y', 'E3'], ['u', 'F3'], ['8', 'Gb3'],
+    ['i', 'G3'], ['9', 'Ab3'], ['o', 'A3'], ['p', 'B3'], ['0', 'Bb3'],
+    ['[', 'C4'], ['=', 'Db4'], ['z', 'D4'], ['s', 'Eb4'], ['x', 'E4'],
+    ['c', 'F4'], ['f', 'Gb4'], ['v', 'G4'], ['g', 'Ab4'], ['b', 'A4'],
+    ['h', 'Bb4'], ['n', 'B4'], ['m', 'C5'], ['k', 'Db5'], [',', 'D5'],
+    ['l', 'Eb5'], ['.', 'E5'], ['/', 'F5'], ['\'', 'Gb5']]);
+
+//every note on the piano from lowest to highest
 const notes = ['A1', 'Bb1', 'B1', 'C2', 'Db2', 'D2', 'Eb2', 'E2', 'F2', 'Gb2',
     'G2', 'Ab2', 'A2', 'Bb2', 'B2', 'C3', 'Db3', 'D3', 'Eb3', 'E3', 'F3',
     'Gb3', 'G3', 'Ab3', 'A3', 'Bb3', 'B3', 'C4', 'Db4', 'D4', 'Eb4', 'E4',
     'F4', 'Gb4', 'G4', 'Ab4', 'A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5',
     'E5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'B5', 'C6'];
+
+//where 2 is the highest note and 32 is the lowest, ledger_lines represents the
+//notes that have a ledger line attached to them.
+const ledger_lines = [2, 4, 16, 28, 30, 32];
+
+///////////////////////////////////////////////////////////////////////////////
+
+//GLOBALS//////////////////////////////////////////////////////////////////////
+let keys_selected = new Map()
+let mousedown = false
+let keydown = false
+///////////////////////////////////////////////////////////////////////////////
+
+//set up website
 pad_black_keys();
 draw_staff();
 
@@ -115,42 +132,57 @@ function draw_staff() {
 function is_outside_staff(true_height) {
     return (true_height > 26 || true_height < 5 || true_height === 16);
 }
+/**
+ * renders a note at the given height onto the staff with the appropriate
+ * ledger lines.
+ * @param {*} ctx : a CanvasRenderingContext2D Object to render to
+ * @param {*} height : the y height in pixels of the note to be rendered
+ */
+function render_note(ctx, height) {
+    ctx.beginPath();
+    ctx.arc(100, height, 20, 0, Math.PI * 2, true);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.ellipse(100, height, 15, 10, (Math.PI) /2 - 0.2, 0, Math.PI*2, true);
+    ctx.fill()
+    ctx.globalCompositeOperation = 'source-over';
+    let true_height = height/20;
+    if (is_outside_staff(true_height)) {
+        let line = true_height;
+        while (is_outside_staff(line) && line > 0 && line < 33) {
+            if (ledger_lines.includes(line)) {
+                ctx.beginPath();
+                ctx.moveTo(70, 20*line);
+                ctx.lineTo(130, 20*line);
+                ctx.stroke();
+                ctx.closePath();
+            }
+            if (line < 5) {
+                line++;
+            } else {
+                line--;
+            }
+        }
+    }
+}
+
+/**
+ * creates a CanvasRenderingContext2D object and draws the provided note onto
+ * the canvas.
+ * @param {*} note : String in notes array e.g "Bb2"
+ */
 function draw_note(note) {
     const canvas = document.getElementById('staff_canvas');
     const ctx = canvas.getContext('2d');
     let height = 20 * 32; //start from the bottom and go up
-    const ledger_lines = [2, 4, 16, 28, 30, 32]
     for (let value of notes) {
-        if (value.includes('b') || value.includes('C') || value.includes('F'))  {
+        if (value.includes('b') || value.includes('C')
+            || value.includes('F'))  {
             height -= 20;
         }
         if (value === note) {
-            ctx.beginPath();
-            ctx.arc(100, height, 20, 0, Math.PI * 2, true);
-            ctx.fill();
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.ellipse(100, height, 15, 10, (Math.PI) /2 - 0.2, 0, Math.PI*2, true);
-            ctx.fill()
-            ctx.globalCompositeOperation = 'source-over';
-            let true_height = height/20;
-            if (is_outside_staff(true_height)) {
-                let line = true_height;
-                while (is_outside_staff(line) && line > 0 && line < 33) {
-                    if (ledger_lines.includes(line)) {
-                        ctx.beginPath();
-                        ctx.moveTo(70, 20*line);
-                        ctx.lineTo(130, 20*line);
-                        ctx.stroke();
-                        ctx.closePath();
-                    }
-                    if (line < 5) {
-                        line++;
-                    } else {
-                        line--;
-                    }
-                }
-            }
+            render_note(ctx, height);
             break;
         }
     } 
