@@ -18,15 +18,13 @@ img {
 }
 .piano {
     position: relative;
+    display: flex;
+    justify-content: space-between;
 }
 
 .white_keys  {
     display:flex;
     justify-content: flex-start;
-    gap: 0;
-    margin: 0;
-    padding-left: 0%;
-    padding-right: 0%;
     width: 80%;
     border: 10px solid rgba(204, 102, 153, 0.5);
 }
@@ -51,5 +49,22 @@ img {
 }
 .selected_key {
     transform: scale(0.97);
+}
+.staff {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+canvas {
+    border: 1px, solid, black;
+    height: 400px;
+    width: 50%;
+}
+.staff_text {
+    position: absolute;
+    top: 37vh;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
 }
 
