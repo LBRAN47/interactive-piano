@@ -126,8 +126,13 @@ function draw_note(note) {
         }
         if (value === note) {
             ctx.beginPath();
-            ctx.arc(100, height, 16, 0, Math.PI * 2, true);
+            ctx.arc(100, height, 20, 0, Math.PI * 2, true);
             ctx.fill();
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(100, height-2, 10, 0, Math.PI * 2, true);
+            ctx.fill()
+            ctx.globalCompositeOperation = 'source-over';
             let true_height = height/20;
             if (is_outside_staff(true_height)) {
                 let line = true_height;
