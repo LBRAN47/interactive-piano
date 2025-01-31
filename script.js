@@ -17,6 +17,8 @@ const notes = ['A1', 'Bb1', 'B1', 'C2', 'Db2', 'D2', 'Eb2', 'E2', 'F2', 'Gb2',
     'F4', 'Gb4', 'G4', 'Ab4', 'A4', 'Bb4', 'B4', 'C5', 'Db5', 'D5', 'Eb5',
     'E5', 'F5', 'Gb5', 'G5', 'Ab5', 'A5', 'Bb5', 'B5', 'C6'];
 
+const true_notes = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+
 //where 2 is the highest note and 32 is the lowest, ledger_lines represents the
 //notes that have a ledger line attached to them.
 const ledger_lines = [2, 4, 16, 28, 30, 32];
@@ -34,7 +36,7 @@ let keydown = false
 
 //set up website
 pad_black_keys();
-draw_staff();
+redraw_staff();
 
 window.addEventListener('mouseup', (event) => {
         keys_selected.forEach((audio, key_selected) => {
@@ -110,8 +112,7 @@ function pad_black_keys() {
 }
 function draw_staff() {
     const canvas = document.getElementById('staff_canvas');
-    canvas.height = CANVAS_HEIGHT;
-    canvas.width = CANVAS_WIDTH;
+    
 
     const ctx = canvas.getContext('2d');
     const staff_height = 400;
@@ -135,18 +136,59 @@ function is_outside_staff(true_height) {
 }
 
 /**
+ * Determines whether a note should be drawn off to the side (for second intervals)
+ * @param {*} note : string representation of a note e.g. Bb4
+ * @returns true if the note should be drawn as a second else false
+ */
+function is_second(note) {
+    let true_note = note[0]; // get the note from A-G
+    let note_octave = note[note.length -1];
+    let index = true_notes.indexOf(true_note);
+    if (index === -1) {
+        return;
+    }
+    let note_below = true_notes[(index - 1 + 7) % 7];
+    for (let key of keys_selected.keys()) {
+        key_note = key.id;
+        key_true_note = key_note[0];
+        key_octave = key_note[key_note.length - 1];
+        if (key_true_note != note_below) {
+            continue;
+        }
+        if (true_note === 'C') {
+            if (note_below === 'B' &&
+                note_octave == 1 + parseInt(key_octave)) {
+                return !is_second(key.id);
+            }
+        } else {
+            if (note_octave === key_octave) {
+                return !is_second(key.id);
+            }
+        }
+    }
+    return false;
+}
+    
+
+/**
  * renders a note at the given height onto the staff with the appropriate
  * ledger lines.
  * @param {*} ctx : a CanvasRenderingContext2D Object to render to
  * @param {*} height : the y height in pixels of the note to be rendered
  */
-function render_note(ctx, height) {
+function render_note(ctx, height, note) {
+    let x;
+    if (is_second(note)) {
+        x = 135;
+    } else {
+        x = 100;
+    }
     ctx.beginPath();
-    ctx.arc(100, height, 20, 0, Math.PI * 2, true);
+    ctx.arc(x, height, 20, 0, Math.PI * 2, true);
     ctx.fill();
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.ellipse(100, height, 15, 10, (Math.PI) /2 - 0.2, 0, Math.PI*2, true);
+    ctx.ellipse(x, height, 15, 10, (Math.PI) /2 - 0.2, 0, Math.PI*2, true);
     ctx.fill()
     ctx.globalCompositeOperation = 'source-over';
     let true_height = height/20;
@@ -155,8 +197,12 @@ function render_note(ctx, height) {
         while (is_outside_staff(line) && line > 0 && line < 33) {
             if (ledger_lines.includes(line)) {
                 ctx.beginPath();
-                ctx.moveTo(70, 20*line);
-                ctx.lineTo(130, 20*line);
+                if (is_second(note) && line > 27) {
+                    ctx.moveTo(x-5, 20*line);
+                } else {
+                    ctx.moveTo(x-30, 20*line);
+                }
+                ctx.lineTo(x+30, 20*line);
                 ctx.stroke();
                 ctx.closePath();
             }
@@ -184,7 +230,7 @@ function draw_note(note) {
             height -= 20;
         }
         if (value === note) {
-            render_note(ctx, height);
+            render_note(ctx, height, note);
             break;
         }
     } 
@@ -193,12 +239,15 @@ function draw_note(note) {
  * clears the canvas and draws the staff + every note that is currently selected
  */
 function redraw_staff() {
-    const ctx = document.getElementById('staff_canvas').getContext('2d');
+    const canvas = document.getElementById('staff_canvas');
+    canvas.height = CANVAS_HEIGHT;
+    canvas.width = CANVAS_WIDTH;
+    const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    draw_staff();
     for (let key of keys_selected.keys()) {
         draw_note(key.id);
     }
+    draw_staff();
 }
 
     
