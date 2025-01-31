@@ -67,4 +67,9 @@ canvas {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 700;
 }
+.flat {
+    width: 2.5%;
+    position: absolute;
+    z-index: 0;
+}
 

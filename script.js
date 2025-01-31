@@ -42,6 +42,7 @@ window.addEventListener('mouseup', (event) => {
         keys_selected.forEach((audio, key_selected) => {
             key_selected.parentElement.classList.remove('selected_key');
         })
+        remove_all_flats();
         keys_selected.clear();
         mousedown = false;
         redraw_staff();
@@ -61,6 +62,7 @@ keys.forEach(function(key) {
         }
     })
 })
+
 function keydown_listener(event) {
     if (key_binds.has(event.key)) {
         key = document.getElementById(key_binds.get(event.key));
@@ -70,15 +72,26 @@ function keydown_listener(event) {
         press_key(key);
     }
 }
+
 function keyup_listener(event) {
     if (key_binds.has(event.key))  {
         key = document.getElementById(key_binds.get(event.key));
         key.parentElement.classList.remove('selected_key');
         keys_selected.delete(key);
+        const flats = document.getElementsByClassName("flat");
+        for (let flat of flats) {
+            if (flat.id.includes(key.id)) {
+                flat.remove();
+            }
+        }
         redraw_staff();
     }
 }
 
+/**
+ * Plays the key sound, draws it on the staff and presses the key down.
+ * @param {*} key : an element either belonging to the black_key or white_key class
+ */
 function press_key(key) {
     key.parentElement.classList.add('selected_key');
     let audio = new Audio('Sounds/' + key.id + '.mp3');
@@ -88,6 +101,10 @@ function press_key(key) {
     
 
 }
+/**
+ * applys the required margin to the black_key elements to fit on top of the
+ * white keys
+ */
 function pad_black_keys() {
     const black_keys = document.querySelectorAll('.black_key');
     let count = -1
@@ -110,6 +127,19 @@ function pad_black_keys() {
         count++;
     })
 }
+/**
+ * removes all elements from the class flat
+ */
+function remove_all_flats() {
+    const flats = document.querySelectorAll(".flat");
+        flats.forEach(flat => {
+            flat.remove();
+        })
+}
+/**
+ * draws the lines of the staff onto the canvas
+ * @returns null
+ */
 function draw_staff() {
     const canvas = document.getElementById('staff_canvas');
     
@@ -129,8 +159,16 @@ function draw_staff() {
         ctx.stroke();
         ctx.closePath();
     }
-    return;
 }
+
+/**
+ * returns true if the note is above, below or inbetween the staff, such that
+ * it requires a ledger line
+ * @param {*} true_height : number representing which space the note is in on
+ *                          the staff, where 2 is the highest note and 32 is
+ *                          the lowest
+ * @returns true if it is outside the staff, false otherwise
+ */
 function is_outside_staff(true_height) {
     return (true_height > 26 || true_height < 5 || true_height === 16);
 }
@@ -168,69 +206,96 @@ function is_second(note) {
     }
     return false;
 }
-    
+/**
+ * draws the appropriate ledger lines for the given note on the given line
+ * @param {*} line : number representing which space the note is in on the
+ *                   staff, where 2 is the highest note and 32 is the lowest
+ * @param {*} ctx : the canvas context to draw on
+ * @param {*} note :S tring in notes array e.g "Bb2"
+ * @param {*} x : the x position in pixels of the note on the canvas
+ */
+function draw_ledger_lines(line, ctx, note, x) {
+    while (is_outside_staff(line) && line > 0 && line < 33) {
+        if (ledger_lines.includes(line)) {
+            ctx.beginPath();
+            if (is_second(note) && line > 27) {
+                ctx.moveTo(x-5, 20*line);
+            } else {
+                ctx.moveTo(x-30, 20*line);
+            }
+            ctx.lineTo(x+30, 20*line);
+            ctx.stroke();
+            ctx.closePath();
+        }
+        if (line < 5) {
+            line++;
+        } else {
+            line--;
+        }
+    }
+}
+/**
+ * redners a flat symbol next to the given note
+ * @param {*} y : the y position of the note inside the canvas
+ * @param {*} note : String in notes array e.g "Bb2"
+ * @returns : Null
+ */
+function draw_flat(y, note) {
+    if (document.getElementById(note + '_flat') != null) {
+        return;
+    }
+    const flat = document.createElement('img');
+    flat.src = 'Images/flat.png';
+    flat.classList.add('flat');
+    flat.id =  note + '_flat';
+    document.getElementById("staff").appendChild(flat);
+    flat.style.right = '10vw';
+    flat.style.top = (y /2 - 23) + 'px';
+}
 
 /**
  * renders a note at the given height onto the staff with the appropriate
  * ledger lines.
- * @param {*} ctx : a CanvasRenderingContext2D Object to render to
- * @param {*} height : the y height in pixels of the note to be rendered
+ * @param {*} x : the x position where the note will be rendered
+ * @param {*} y : the y position where the note will be rendered
+ * @param {*} note : String in notes array e.g "Bb2"
  */
-function render_note(ctx, height, note) {
-    let x;
-    if (is_second(note)) {
-        x = 135;
-    } else {
-        x = 100;
-    }
+function render_note(x, y, note) {
+    const canvas = document.getElementById('staff_canvas');
+    const ctx = canvas.getContext('2d');
     ctx.beginPath();
-    ctx.arc(x, height, 20, 0, Math.PI * 2, true);
+    ctx.arc(x, y, 20, 0, Math.PI * 2, true);
     ctx.fill();
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.ellipse(x, height, 15, 10, (Math.PI) /2 - 0.2, 0, Math.PI*2, true);
+    ctx.ellipse(x, y, 15, 10, (Math.PI) /2 - 0.2, 0, Math.PI*2, true);
     ctx.fill()
     ctx.globalCompositeOperation = 'source-over';
-    let true_height = height/20;
+    if (note.includes('b')) {
+        draw_flat(ctx, x, y, note);
+    }
+    let true_height = y/20;
     if (is_outside_staff(true_height)) {
-        let line = true_height;
-        while (is_outside_staff(line) && line > 0 && line < 33) {
-            if (ledger_lines.includes(line)) {
-                ctx.beginPath();
-                if (is_second(note) && line > 27) {
-                    ctx.moveTo(x-5, 20*line);
-                } else {
-                    ctx.moveTo(x-30, 20*line);
-                }
-                ctx.lineTo(x+30, 20*line);
-                ctx.stroke();
-                ctx.closePath();
-            }
-            if (line < 5) {
-                line++;
-            } else {
-                line--;
-            }
-        }
+        draw_ledger_lines(true_height, ctx, note, x);
     }
 }
 
 /**
- * creates a CanvasRenderingContext2D object and draws the provided note onto
- * the canvas.
+ * draws the provided note onto the canvas.
  * @param {*} note : String in notes array e.g "Bb2"
  */
 function draw_note(note) {
-    const canvas = document.getElementById('staff_canvas');
-    const ctx = canvas.getContext('2d');
-    let height = 20 * 32; //start from the bottom and go up
+    
+    let y = 20 * 32; //start from the bottom and go up
+    let x;
     for (let value of notes) {
         if (value.includes('b') || value.includes('C')
             || value.includes('F'))  {
-            height -= 20;
+            y -= 20;
         }
         if (value === note) {
-            render_note(ctx, height, note);
+            x = is_second(note) ? 135 : 100;
+            render_note(x, y, note);
             break;
         }
     } 
