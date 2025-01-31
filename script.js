@@ -272,7 +272,7 @@ function render_note(x, y, note) {
     ctx.fill()
     ctx.globalCompositeOperation = 'source-over';
     if (note.includes('b')) {
-        draw_flat(ctx, x, y, note);
+        draw_flat(y, note);
     }
     let true_height = y/20;
     if (is_outside_staff(true_height)) {
