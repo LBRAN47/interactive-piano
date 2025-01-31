@@ -26,12 +26,22 @@ const ledger_lines = [2, 4, 16, 28, 30, 32];
 const CANVAS_HEIGHT = 800;
 const CANVAS_WIDTH = 200;
 
+export {
+    key_binds,
+    notes,
+    true_notes,
+    ledger_lines
+};
+import {get_bass_note, draw_bass_note} from './chord.js';
+
 ///////////////////////////////////////////////////////////////////////////////
 
 //GLOBALS//////////////////////////////////////////////////////////////////////
-let keys_selected = new Map()
-let mousedown = false
-let keydown = false
+
+//Maps a key element to an Audio object
+let keys_selected = new Map();
+
+let mousedown = false;
 ///////////////////////////////////////////////////////////////////////////////
 
 //set up website
@@ -65,7 +75,7 @@ keys.forEach(function(key) {
 
 function keydown_listener(event) {
     if (key_binds.has(event.key)) {
-        key = document.getElementById(key_binds.get(event.key));
+        let key = document.getElementById(key_binds.get(event.key));
         if (keys_selected.has(key)) {
             return;
         }
@@ -75,7 +85,7 @@ function keydown_listener(event) {
 
 function keyup_listener(event) {
     if (key_binds.has(event.key))  {
-        key = document.getElementById(key_binds.get(event.key));
+        let key = document.getElementById(key_binds.get(event.key));
         key.parentElement.classList.remove('selected_key');
         keys_selected.delete(key);
         const flats = document.getElementsByClassName("flat");
@@ -187,9 +197,9 @@ function is_second(note) {
     }
     let note_below = true_notes[(index - 1 + 7) % 7];
     for (let key of keys_selected.keys()) {
-        key_note = key.id;
-        key_true_note = key_note[0];
-        key_octave = key_note[key_note.length - 1];
+        let key_note = key.id;
+        let key_true_note = key_note[0];
+        let key_octave = key_note[key_note.length - 1];
         if (key_true_note != note_below) {
             continue;
         }
@@ -313,6 +323,7 @@ function redraw_staff() {
     for (let key of keys_selected.keys()) {
         draw_note(key.id);
     }
+    draw_bass_note(keys_selected);
     draw_staff();
 }
 
