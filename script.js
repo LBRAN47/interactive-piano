@@ -240,7 +240,7 @@ function draw_ledger_lines(line, ctx, note, x) {
  * @param {*} note : String in notes array e.g "Bb2"
  * @returns : Null
  */
-function draw_flat(y, note) {
+function draw_flat(x, y, note) {
     if (document.getElementById(note + '_flat') != null) {
         return;
     }
@@ -249,7 +249,7 @@ function draw_flat(y, note) {
     flat.classList.add('flat');
     flat.id =  note + '_flat';
     document.getElementById("staff").appendChild(flat);
-    flat.style.right = '10vw';
+    flat.style.right = (250 - (x/2)) + 'px';
     flat.style.top = (y /2 - 23) + 'px';
 }
 
@@ -272,7 +272,7 @@ function render_note(x, y, note) {
     ctx.fill()
     ctx.globalCompositeOperation = 'source-over';
     if (note.includes('b')) {
-        draw_flat(y, note);
+        draw_flat(x, y, note);
     }
     let true_height = y/20;
     if (is_outside_staff(true_height)) {
@@ -309,6 +309,7 @@ function redraw_staff() {
     canvas.width = CANVAS_WIDTH;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    remove_all_flats();
     for (let key of keys_selected.keys()) {
         draw_note(key.id);
     }
