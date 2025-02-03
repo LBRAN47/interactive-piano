@@ -32,7 +32,7 @@ export {
     true_notes,
     ledger_lines
 };
-import {get_bass_note, draw_bass_note, get_chord_intervals} from './chord.js';
+import {get_bass_note, draw_bass_note, get_chord_intervals, get_chord} from './chord.js';
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -325,7 +325,7 @@ function redraw_staff() {
     }
     draw_bass_note(keys_selected);
     draw_staff();
-    console.log(get_chord_intervals(keys_selected.keys()));
+    console.log(get_chord(keys_selected));
 }
 
     
