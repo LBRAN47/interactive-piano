@@ -21,12 +21,13 @@ export function get_bass_note(keys_selected) {
     for (let key of keys_selected) {
         if (lowest_note === undefined) {
             lowest_note = key;
-            lowest_note_pos = notes.indexOf(key);
+            lowest_note_pos = notes.indexOf(key.id);
+            continue;
         }
-        let key_pos = notes.indexOf(key);
+        let key_pos = notes.indexOf(key.id);
         if (key_pos < lowest_note_pos) {
             lowest_note = key;
-            lowest_note_pos = notes.indexOf(key);
+            lowest_note_pos = notes.indexOf(key.id);
         }
     }
     return lowest_note;
@@ -34,23 +35,54 @@ export function get_bass_note(keys_selected) {
 function get_octave(note) {
     return parseInt(note[note.length-1]);
 }
+function lower_octave(note) {
+    let octave = get_octave(note) - 1;
+    return note.replace(get_octave(note).toString(), octave.toString());
+}
+
+function sort_by_pitch(arr) {
+    let swapped, temp;  
+    for (let i = 0; i < arr.length - 1; i++) {
+        swapped = false;
+        for (let j = 0; j < arr.length - i - 1; j++) {
+            if (notes.indexOf(arr[j]) > notes.indexOf(arr[j+1])) {
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+                swapped = true;
+            }
+        }
+        if (swapped === false) {
+            break;
+        }
+    }
+    return arr;
+}
 function remove_octaves(keys_selected) {
-    let notes = [];
+    let bass_note = get_bass_note(keys_selected.keys());
+    if (bass_note != undefined) {
+        bass_note = bass_note.id;
+    }
+    let chord_notes = [];
     let true_notes = [];
     for (let key of keys_selected.keys()) {
-        if (!true_notes.includes(get_true_note(key.id))) {
-            notes.push(key.id);
-            true_notes.push(get_true_note(key.id));
+        key = key.id;
+        if (!true_notes.includes(get_true_note(key))) {
+            while (notes.indexOf(lower_octave(key)) > notes.indexOf(bass_note)) {
+                key = lower_octave(key);
+            }
+            chord_notes.push(key);
+            true_notes.push(get_true_note(key));
         } else {
-            for (let i = 0; i < notes.length; i++) {
-                if (get_true_note(notes[i]) === get_true_note(key.id) &&
-                get_octave(notes[i]) > get_octave(key.id)) {
-                    notes[i] = key.id;
-                }
+            for (let i = 0; i < chord_notes.length; i++) {
+                if (get_true_note(chord_notes[i]) === get_true_note(key) &&
+                get_octave(chord_notes[i]) > get_octave(key)) {
+                    chord_notes[i] = key;
+                }   
             }
         }
     }
-    return notes;
+    return chord_notes;
 }
 /**
  * taking in an iterable of key elements, returns an array of numbers
@@ -149,9 +181,8 @@ export function get_chord(keys_selected) {
         }
     }
     return "YO";
-    
-
 }
+
 function get_chord_string(chord, true_bass, bass_note) {
     if (true_bass === bass_note) {
         return get_true_note(notes[true_bass]) + chord_names.get(chord);
