@@ -7,7 +7,7 @@ const dim = [3, 3, 6];
 const maj7 = [4, 3, 4, 1];
 const triads = [maj, min, dim];
 
-const chord_names = new Map([[maj, "major"], [min, 'minor'], [dim, 'dim']]);
+const chord_names = new Map([[maj, ""], [min, 'm'], [dim, 'dim']]);
 /**
  * taking in an iterable of keys, returns the lowest note. If empty returns
  * undefined.
