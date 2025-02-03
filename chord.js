@@ -3,13 +3,20 @@ import {notes} from './script.js';
 
 const maj = [4, 3, 5];
 const min = [3, 4, 5];
-const dim = [3, 3, 6];
+const half_dim = [3, 3, 6];
 const sus = [5, 2, 5];
 const sus2 = [2, 5, 5];
 const maj7 = [4, 3, 4, 1];
-const triads = [maj, min, dim, sus, sus2];
+const seventh = [4, 3, 3, 2];
+const min7 = [3, 4, 3, 2];
+const dim = [3, 3, 3, 3];
+const dim7 = [3, 3, 4, 2];
+const triads = [maj, min, half_dim, sus, sus2];
+const sevenths = [maj7, min7, seventh, dim, dim7];
 
-const chord_names = new Map([[maj, ""], [min, 'm'], [dim, 'dim'], [sus, 'sus'], [sus2, 'sus2']]);
+const chord_names = new Map([[maj, ""], [min, 'm'], [half_dim, 'ø'], [sus, 'sus'],
+    [sus2, 'sus2'], [maj7, 'maj7'], [min7, 'm7'], [seventh, '7'], [dim, 'dim'],
+    [dim7, 'm7(b5)']]);
 /**
  * taking in an iterable of keys, returns the lowest note. If empty returns
  * undefined.
@@ -82,7 +89,7 @@ function remove_octaves(keys_selected) {
             }
         }
     }
-    return chord_notes;
+    return sort_by_pitch(chord_notes);
 }
 /**
  * taking in an iterable of key elements, returns an array of numbers
@@ -148,7 +155,9 @@ export function shuffle_chord(intervals, start) {
  * @returns 
  */
 export function get_chord(keys_selected) {
+    console.log(keys_selected)
     let intervals = get_chord_intervals(keys_selected);
+    console.log(intervals);
     if (intervals === undefined) {
         return;
     }
@@ -159,9 +168,12 @@ export function get_chord(keys_selected) {
             intervals[i] = Math.abs(intervals[i]-12);
         }
     }
+    console.log('intervals: ' + intervals)
     let chords;
     if (intervals.length === 3) {
         chords = triads;
+    } else if (intervals.length === 4) {
+        chords = sevenths;
     } else {
         return;
     }
