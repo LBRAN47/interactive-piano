@@ -31,6 +31,9 @@ export function get_bass_note(keys_selected) {
     }
     return lowest_note;
 }
+function get_octave(note) {
+    return parseInt(note[note.length-1]);
+}
 function remove_octaves(keys_selected) {
     let notes = [];
     let true_notes = [];
@@ -38,6 +41,13 @@ function remove_octaves(keys_selected) {
         if (!true_notes.includes(get_true_note(key.id))) {
             notes.push(key.id);
             true_notes.push(get_true_note(key.id));
+        } else {
+            for (let i = 0; i < notes.length; i++) {
+                if (get_true_note(notes[i]) === get_true_note(key.id) &&
+                get_octave(notes[i]) > get_octave(key.id)) {
+                    notes[i] = key.id;
+                }
+            }
         }
     }
     return notes;
