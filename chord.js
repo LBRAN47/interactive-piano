@@ -4,10 +4,12 @@ import {notes} from './script.js';
 const maj = [4, 3, 5];
 const min = [3, 4, 5];
 const dim = [3, 3, 6];
+const sus = [5, 2, 5];
+const sus2 = [2, 5, 5];
 const maj7 = [4, 3, 4, 1];
-const triads = [maj, min, dim];
+const triads = [maj, min, dim, sus, sus2];
 
-const chord_names = new Map([[maj, ""], [min, 'm'], [dim, 'dim']]);
+const chord_names = new Map([[maj, ""], [min, 'm'], [dim, 'dim'], [sus, 'sus'], [sus2, 'sus2']]);
 /**
  * taking in an iterable of keys, returns the lowest note. If empty returns
  * undefined.
@@ -16,8 +18,7 @@ const chord_names = new Map([[maj, ""], [min, 'm'], [dim, 'dim']]);
  */
 export function get_bass_note(keys_selected) {
     let lowest_note, lowest_note_pos;
-    for (let key of keys_selected.keys()) {
-        key = key.id
+    for (let key of keys_selected) {
         if (lowest_note === undefined) {
             lowest_note = key;
             lowest_note_pos = notes.indexOf(key);
@@ -30,7 +31,17 @@ export function get_bass_note(keys_selected) {
     }
     return lowest_note;
 }
-
+function remove_octaves(keys_selected) {
+    let notes = [];
+    let true_notes = [];
+    for (let key of keys_selected.keys()) {
+        if (!true_notes.includes(get_true_note(key.id))) {
+            notes.push(key.id);
+            true_notes.push(get_true_note(key.id));
+        }
+    }
+    return notes;
+}
 /**
  * taking in an iterable of key elements, returns an array of numbers
  * representing the interval between each note in the chord.
@@ -41,6 +52,7 @@ export function get_bass_note(keys_selected) {
  *          numbers.
  */
 export function get_chord_intervals(keys_selected) {
+    keys_selected = remove_octaves(keys_selected);
     const bass_note = get_bass_note(keys_selected);
     if (bass_note === undefined) {
         return undefined;
@@ -50,8 +62,8 @@ export function get_chord_intervals(keys_selected) {
     intervals.push(notes.indexOf(bass_note));
     for (let i = notes.indexOf(bass_note) + 1; i < notes.length; i++) {
         count++;
-        for (let key of keys_selected.keys()) {
-            if (key.id === notes[i]) {
+        for (let key of keys_selected) {
+            if (key === notes[i]) {
                 intervals.push(count);
                 count = 0;
             }
@@ -89,8 +101,7 @@ export function shuffle_chord(intervals, start) {
 
 /**
  * takes in a map of the keys_selected and returns the name
- * of the chord. In particular, an array with the note name
- * (e.g. E, B, A) and chord type
+ * of the chord.
  * @param {*} keys_selected 
  * @returns 
  */
@@ -113,11 +124,16 @@ export function get_chord(keys_selected) {
         return;
     }
     for (let chord of chords) {
+        if (array_equals(sus2, intervals)) {
+            return get_chord_string(sus2, bass_note, bass_note);
+        } else if (array_equals(sus, intervals)) {
+            return get_chord_string(sus, bass_note, bass_note);
+        }
         let true_bass = bass_note;
         for (let i=0; i < intervals.length; i++) {
             let interval_shuffle = shuffle_chord(intervals, i);
             if (interval_shuffle.toString() === chord.toString()) {
-                return get_true_note(notes[true_bass]) + chord_names.get(chord);
+                return get_chord_string(chord, true_bass, bass_note);
             }
             true_bass += intervals[i];
         }
@@ -126,6 +142,19 @@ export function get_chord(keys_selected) {
     
 
 }
+function get_chord_string(chord, true_bass, bass_note) {
+    if (true_bass === bass_note) {
+        return get_true_note(notes[true_bass]) + chord_names.get(chord);
+    } else {
+        return get_true_note(notes[true_bass]) + chord_names.get(chord) + 
+                    "/" + get_true_note(notes[bass_note]);
+    }
+}
+
+function array_equals(arr1, arr2) {
+    return (arr1.toString() === arr2.toString());
+}
+
 function get_true_note(note) {
     if (note.includes('b')) {
         note = note.slice(0, 2);
