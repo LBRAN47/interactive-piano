@@ -45,8 +45,12 @@ let mousedown = false;
 ///////////////////////////////////////////////////////////////////////////////
 
 //set up website
-pad_black_keys();
-redraw_staff();
+window.addEventListener('load', (event) => {
+    pad_black_keys();
+    redraw_staff();
+    draw_keybinds();
+})
+
 
 window.addEventListener('mouseup', (event) => {
         keys_selected.forEach((audio, key_selected) => {
@@ -117,25 +121,83 @@ function press_key(key) {
  */
 function pad_black_keys() {
     const black_keys = document.querySelectorAll('.black_key');
-    let count = -1
+    let count = 0
     black_keys.forEach(function(black_key) {
-        if (count == -1) {
-            black_key.style.marginLeft = '2.2vw';
-            black_key.style.marginRight = '1.56vw';
-            count++;
-            return;
-        }
         if (count % 5 === 0 || count % 5 === 2) {
-            black_key.style.marginLeft = '1.56vw';
+            black_key.style.marginRight = '3.27vw';
+            black_key.style.marginLeft = '0vw';
         } else {
-            black_key.style.marginLeft = '0.35vw';
-        }if (count % 5 === 1 || count % 5 === 4) {
-            black_key.style.marginRight = '1.56vw';
-        } else {
-            black_key.style.marginRight = '0.35vw';
+            black_key.style.marginRight = '0.6vw';
+            black_key.style.marginLeft = '0vw';
         }
         count++;
     })
+}
+
+function draw_keybinds() {
+    const black_key = [0, 2, 4, 7, 9];
+    const white_key = [1, 3, 5, 6, 8, 10, 11];
+    let key_binds_div;
+    let count = 0;
+    for (let bind of key_binds.keys()) {
+        let text = document.createElement('p');
+        text.innerHTML = bind;
+        text.classList.add('keybind');
+        if (black_key.includes(count % 12)) {
+            key_binds_div = document.getElementById('black_keybinds');
+        } else {
+            key_binds_div = document.getElementById('white_keybinds');
+        }
+        key_binds_div.appendChild(text);
+        count++;
+    }
+
+    pad_black_keybinds(document.getElementById('black_keybinds'));
+    pad_white_keybinds(document.getElementById('white_keybinds'));
+
+}
+function pad_black_keybinds(black_keybinds) {
+    black_keybinds.style.top = '25vh';
+    black_keybinds.style.color = 'rgb(208, 225, 225)';
+    let count = 0;
+    for (let bind of black_keybinds.childNodes) {
+        bind.style.marginLeft = '0vw';
+        if (count % 5 === 2 || count % 5 === 4) {
+            bind.style.marginRight = '4.1vw';
+        } else {
+            bind.style.marginRight = '1.5vw';
+        }
+        if (bind.innerHTML === 'p') {
+            bind.style.marginRight = '3.8vw';
+        }
+        if (bind.innerHTML === '=') {
+            bind.style.marginRight = '1.4vw';
+        }
+        if (bind.innerHTML === 's') {
+            bind.style.marginRight = '4.4vw';
+        }
+        if (bind.innerHTML === 'k') {
+            bind.style.marginRight = '1.8vw';
+        }
+        if (bind.innerHTML === 'l') {
+            bind.style.marginRight = '4.7vw';
+        }
+        count++;
+    }
+}
+function pad_white_keybinds(white_keybinds) {
+    white_keybinds.style.top = '40vh';
+    white_keybinds.style.color = 'rgb(117, 117, 117)';
+    let count = 0;
+    const special_chars = ['t', '[', ',', '.'];
+    for (let bind of white_keybinds.childNodes) {
+        bind.style.marginLeft = '0vw';
+        bind.style.marginRight = '1.5vw';
+        if (special_chars.includes(bind.innerHTML)) {
+            bind.style.marginRight = '2vw';
+        }
+        count++;
+    }
 }
 /**
  * removes all elements from the class flat
@@ -260,7 +322,7 @@ function draw_flat(x, y, note) {
     flat.id =  note + '_flat';
     document.getElementById("staff").appendChild(flat);
     flat.style.right = (250 - (x/2)) + 'px';
-    flat.style.top = (y /2 - 23) + 'px';
+    flat.style.top = (y /2 - 13) + 'px';
 }
 
 /**

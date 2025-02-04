@@ -20,6 +20,7 @@ img {
     position: relative;
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
 }
 
 .white_keys  {
@@ -38,6 +39,7 @@ img {
     justify-content: flex-start;
     position: absolute;
     top: 1vh;
+    left: 4.3vh;
 }
 .img_container {
     display: flex;
@@ -63,13 +65,34 @@ canvas {
 }
 .staff_text {
     position: absolute;
-    top: 37vh;
+    top: 32vh;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.5vw;
     font-weight: 700;
 }
 .flat {
     width: 2.5%;
     position: absolute;
     z-index: 0;
+}
+.keybinds {
+    display: flex;
+    position: absolute;
+    margin-right: 0vw;
+
+}
+#black_keybinds {
+    margin-left: 15.4vw;
+}
+#white_keybinds {
+    margin-left: 16.5vw;
+}
+.keybind {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2vw;
+    font-weight: 500;
+    margin-top: -10vh;
+    pointer-events: none;
+
 }
 
