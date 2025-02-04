@@ -10,6 +10,14 @@
     <h1 class="header">
         <p class="title">Virtual Piano</p>
     </h1>
+    <script>
+        let host = window.location.hostname;
+        if (host === "127.0.0.1" || host === "localhost") {
+            document.write('<base href="/">');
+        } else {
+            document.write('<base href="/interactive-piano/">');
+        }
+    </script>
     <div class="piano">
         <div class='white_keys'>
             <div class='img_container'><img id='A1' class='white_key' src='Images/piano_cf.png'></div>

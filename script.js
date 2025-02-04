@@ -43,12 +43,7 @@ let keys_selected = new Map();
 
 let mousedown = false;
 ///////////////////////////////////////////////////////////////////////////////
-let host = window.location.hostname;
-if (host === "127.0.0.1" || host === "localhost") {
-    document.write('<base href="/">');
-} else {
-    document.write('<base href="/interactive-piano/">');
-}
+
 
 //set up website
 window.addEventListener('load', (event) => {
