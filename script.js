@@ -10,7 +10,7 @@ const key_binds = new Map([['1', 'Gb2'], ['q', 'G2'], ['2', 'Ab2'],
     ['h', 'Bb4'], ['n', 'B4'], ['m', 'C5'], ['k', 'Db5'], [',', 'D5'],
     ['l', 'Eb5'], ['.', 'E5'], ['/', 'F5'], ['\'', 'Gb5']]);
 
-//every note on the piano from lowest to highest
+//every note on the piano from lowest to highest.
 const notes = ['A1', 'Bb1', 'B1', 'C2', 'Db2', 'D2', 'Eb2', 'E2', 'F2', 'Gb2',
     'G2', 'Ab2', 'A2', 'Bb2', 'B2', 'C3', 'Db3', 'D3', 'Eb3', 'E3', 'F3',
     'Gb3', 'G3', 'Ab3', 'A3', 'Bb3', 'B3', 'C4', 'Db4', 'D4', 'Eb4', 'E4',
