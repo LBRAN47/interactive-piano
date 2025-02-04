@@ -24,9 +24,10 @@ const min9 = [2, 1, 4, 3, 2];
 const ninth = [2, 2, 3, 3, 2];
 const b9 = [1, 3, 3, 3, 2];
 const m7b9 = [1, 2, 4, 3, 2];
+const sharp9 = [3, 1, 3, 3, 2];
 const triads = [maj, min, half_dim, sus, sus2, aug, flat5];
 const quads = [maj7, min7, seventh, dim, dim7, minmaj7, add9];
-const ninths = [maj9, min9, ninth, b9, m7b9];
+const ninths = [maj9, min9, ninth, b9, m7b9, sharp9];
 //these chords are given priority as they are technically inversions
 //of other chords, but are better known with these names
 const prio_chords = [sus2, sus, maj6, min6];  
@@ -36,7 +37,7 @@ const chord_names = new Map([[maj, ""], [min, 'm'], [half_dim, 'ø'],
     [maj7, 'maj7'], [min7, 'm7'], [seventh, '7'], [dim, 'dim'],
     [dim7, 'm7(♭5)'], [maj6, '6'], [min6, 'min6'], [minmaj7, 'm(maj7)'],
     [add9, 'add9'], [maj9, 'maj9'], [min9, 'm9'], [ninth, '9'],
-    [b9, '7(♭9)'], [m7b9, 'm7(♭9)']]);
+    [b9, '7(♭9)'], [m7b9, 'm7(♭9)'], [sharp9, '7(♯9)']]);
 /**
  * taking in an iterable of keys, returns the lowest note. If empty returns
  * undefined.
