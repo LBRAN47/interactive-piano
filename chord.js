@@ -8,6 +8,7 @@ const sus = [5, 2, 5];
 const sus2 = [2, 5, 5];
 const aug = [4, 4, 4];
 const flat5 = [4, 2, 6];
+
 const maj7 = [4, 3, 4, 1];
 const seventh = [4, 3, 3, 2];
 const min7 = [3, 4, 3, 2];
@@ -16,8 +17,16 @@ const dim = [3, 3, 3, 3];
 const dim7 = [3, 3, 4, 2];
 const maj6 = [4, 3, 2, 3];
 const min6 = [3, 4, 2, 3];
+const add9 = [2, 2, 3, 5];
+
+const maj9 = [2, 2, 3, 4, 1];
+const min9 = [2, 1, 4, 3, 2];
+const ninth = [2, 2, 3, 3, 2];
+const b9 = [1, 3, 3, 3, 2];
+const m7b9 = [1, 2, 4, 3, 2];
 const triads = [maj, min, half_dim, sus, sus2, aug, flat5];
-const quads = [maj7, min7, seventh, dim, dim7, minmaj7];
+const quads = [maj7, min7, seventh, dim, dim7, minmaj7, add9];
+const ninths = [maj9, min9, ninth, b9, m7b9];
 //these chords are given priority as they are technically inversions
 //of other chords, but are better known with these names
 const prio_chords = [sus2, sus, maj6, min6];  
@@ -25,7 +34,9 @@ const prio_chords = [sus2, sus, maj6, min6];
 const chord_names = new Map([[maj, ""], [min, 'm'], [half_dim, 'ø'],
     [sus, 'sus'], [sus2, 'sus2'], [aug, 'aug'], [flat5, '♭5'],
     [maj7, 'maj7'], [min7, 'm7'], [seventh, '7'], [dim, 'dim'],
-    [dim7, 'm7(♭5)'], [maj6, '6'], [min6, 'min6'], [minmaj7, 'm(maj7)']]);
+    [dim7, 'm7(♭5)'], [maj6, '6'], [min6, 'min6'], [minmaj7, 'm(maj7)'],
+    [add9, 'add9'], [maj9, 'maj9'], [min9, 'm9'], [ninth, '9'],
+    [b9, '7(♭9)'], [m7b9, 'm7(♭9)']]);
 /**
  * taking in an iterable of keys, returns the lowest note. If empty returns
  * undefined.
@@ -144,6 +155,11 @@ function convert_intervals(array) {
         sum += num;
     }
     array.push(sum);
+    for (let i = 0; i < array.length; i++) {
+        while (array[i] > 6) {
+            array[i] = Math.abs(array[i]-12);
+        }
+    }
     return array;
 }
 /**
@@ -164,34 +180,27 @@ export function shuffle_chord(intervals, start) {
  * @returns 
  */
 export function get_chord(keys_selected) {
-    console.log(keys_selected)
+    //extract the intervals and bass note
     let intervals = get_chord_intervals(keys_selected);
-    console.log(intervals);
     if (intervals === undefined) {
         return;
     }
     let bass_note = intervals[0];
+    //convert to standardised format
     intervals = convert_intervals(intervals);
-    for (let i = 0; i < intervals.length; i++) {
-        while (intervals[i] > 6) {
-            intervals[i] = Math.abs(intervals[i]-12);
-        }
-    }
-    console.log('intervals: ' + intervals)
-    let chords;
-    if (intervals.length === 3) {
-        chords = triads;
-    } else if (intervals.length === 4) {
-        chords = quads;
-    } else {
+
+    let chords = get_possible_chords(intervals);
+    if (chords === undefined) {
         return;
     }
-    for (let chord of chords) {
-        for (let chord_type of  prio_chords) {
-            if (array_equals(chord_type, intervals)) {
-                return get_chord_string(chord_type, bass_note, bass_note);
-            }
+    //we check the priority chords first
+    for (let chord_type of  prio_chords) {
+        if (array_equals(chord_type, intervals)) {
+            return get_chord_string(chord_type, bass_note, bass_note);
         }
+    }
+    //then we check for regular chords with all inversions
+    for (let chord of chords) {
         let true_bass = bass_note;
         for (let i=0; i < intervals.length; i++) {
             let interval_shuffle = shuffle_chord(intervals, i);
@@ -202,6 +211,18 @@ export function get_chord(keys_selected) {
         }
     }
     return;
+}
+function get_possible_chords(intervals) {
+    if (intervals.length === 3) {
+        return triads;
+    } else if (intervals.length === 4) {
+        return quads;
+    } else if (intervals.length === 5) {
+        return ninths;
+    } else {
+        return;
+    }
+
 }
 
 function get_chord_string(chord, true_bass, bass_note) {
