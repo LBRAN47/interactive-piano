@@ -4,7 +4,7 @@
 const key_binds = new Map([['1', 'Gb2'], ['q', 'G2'], ['2', 'Ab2'],
     ['w', 'A2'], ['3', 'Bb2'], ['e', 'B2'], ['r', 'C3'], ['5', 'Db3'],
     ['t', 'D3'], ['6', 'Eb3'], ['y', 'E3'], ['u', 'F3'], ['8', 'Gb3'],
-    ['i', 'G3'], ['9', 'Ab3'], ['o', 'A3'], ['p', 'B3'], ['0', 'Bb3'],
+    ['i', 'G3'], ['9', 'Ab3'], ['o', 'A3'], ['0', 'Bb3'], ['p', 'B3'],
     ['[', 'C4'], ['=', 'Db4'], ['z', 'D4'], ['s', 'Eb4'], ['x', 'E4'],
     ['c', 'F4'], ['f', 'Gb4'], ['v', 'G4'], ['g', 'Ab4'], ['b', 'A4'],
     ['h', 'Bb4'], ['n', 'B4'], ['m', 'C5'], ['k', 'Db5'], [',', 'D5'],
@@ -167,7 +167,7 @@ function pad_black_keybinds(black_keybinds) {
         } else {
             bind.style.marginRight = '1.5vw';
         }
-        if (bind.innerHTML === 'p') {
+        if (bind.innerHTML === '0') {
             bind.style.marginRight = '3.8vw';
         }
         if (bind.innerHTML === '=') {
