@@ -44,6 +44,12 @@ let keys_selected = new Map();
 let mousedown = false;
 ///////////////////////////////////////////////////////////////////////////////
 
+if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+    document.write('<base href="/">');
+} else {
+    document.write('<base href="/interactive-piano/">');
+}
+
 //set up website
 window.addEventListener('load', (event) => {
     pad_black_keys();
