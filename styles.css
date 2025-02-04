@@ -53,13 +53,13 @@ img {
     transform: scale(0.97);
 }
 .staff {
+    border: 1px, solid black;
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 canvas {
-    border: 1px, solid black;
     height: 400px;
     width: 50%;
 }
